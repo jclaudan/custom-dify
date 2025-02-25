@@ -416,8 +416,9 @@ services:
   db:
     image: postgres:15-alpine
     restart: always
-    env_file:
-      - ./middleware.env
+    environment:
+      # Use the shared environment variables.
+      <<: *shared-api-worker-env
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-difyai123456}
       POSTGRES_DB: ${POSTGRES_DB:-dify}
@@ -542,6 +543,8 @@ services:
       - ./volumes/qdrant:/qdrant/storage
     environment:
       QDRANT_API_KEY: ${QDRANT_API_KEY:-difyai123456}
+    ports:
+      -"${QDRANT_API_PORT:-6333}:6333"
 
   # unstructured .
   # (if used, you need to set ETL_TYPE to Unstructured in the api & worker service.)
